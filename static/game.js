@@ -1,6 +1,7 @@
 import { currentInput, initInputCapture } from "./input.js";
 import * as Pixi from "./pixi.mjs";
 import Matter from "https://esm.sh/matter-js@0.20.0";;
+import { Platform } from "./object.js";
 
 const container = document.getElementById("game_area");
 
@@ -10,6 +11,8 @@ await app.init({
   resizeTo: container,
 });
 
+let engine = Matter.Engine.create();
+
 container.appendChild(app.canvas);
 app.canvas.setAttribute("tabindex", "1");
 
@@ -17,63 +20,36 @@ app.canvas.setAttribute("tabindex", "1");
 //  All input is now in currentInput object
 initInputCapture(app.canvas);
 
-let sprite = new Pixi.Graphics().rect(0, 0, 200, 100).fill(0xff0000);
-sprite.cursor = "pointer";
-sprite.eventMode = "static";
-sprite.y = app.screen.height / 2;
-
-app.stage.addChild(sprite);
+let player = new Platform(app, engine, 200, 100, 0xff0000, false);
+let ground = new Platform(app, engine, app.screen.width, 100, 0x00ff00);
+player.body.restitution = 1.8;
+Matter.Body.setPosition(ground.body, { x: 0, y: app.screen.height - 50 });
 
 let elapsed = 0.0;
 
 app.ticker.maxFPS = 60;
 
-let engine = Matter.Engine.create();
-
-const boxBody = Matter.Bodies.rectangle(100, 100, 200, 100, {
-  restitution: 1.8,
-});
-
-Matter.World.add(engine.world, boxBody);
-
-const ground = Matter.Bodies.rectangle(
-  app.screen.width / 2, 
-  app.screen.height - 50, 
-  app.screen.width, 
-  100, 
-  { isStatic: true }
-);
-
-Matter.World.add(engine.world, ground);
-
-let groundSprite = new Pixi.Graphics()
-    .rect(0, 0, app.screen.width, 50).fill(0x00ff00);
-groundSprite.y = app.screen.height - 50;
-
 var runner = Matter.Runner.create();
 Matter.Runner.run(runner, engine);
-
-app.stage.addChild(groundSprite);
 
 app.ticker.add((ticker) => {
   elapsed += ticker.deltaTime;
 
-  if (currentInput.goingRight) {
-    boxBody.position.x += 5;
-  }
-  if (currentInput.goingLeft) {
-    boxBody.position.x -= 5;
-  }
-  if (currentInput.goingUp) {
-    boxBody.position.y -= 5;
-  }
-  if (currentInput.goingDown) {
-    boxBody.position.y += 5;
-  }
+  // if (currentInput.goingRight) {
+  //   boxBody.position.x += 5;
+  // }
+  // if (currentInput.goingLeft) {
+  //   boxBody.position.x -= 5;
+  // }
+  // if (currentInput.goingUp) {
+  //   boxBody.position.y -= 5;
+  // }
+  // if (currentInput.goingDown) {
+  //   boxBody.position.y += 5;
+  // }
 
   Matter.Engine.update(engine, ticker.deltaTime * 1000 / 60);
-
-  sprite.x = boxBody.position.x;
-  sprite.y = boxBody.position.y;
-  
+ 
+  player.update();
+  ground.update();
 });
