@@ -1,5 +1,4 @@
 import * as Pixi from "./pixi.mjs";
-import Player from "./player.js";
 
 const container = document.getElementById("game_area");
 

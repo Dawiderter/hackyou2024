@@ -4,7 +4,7 @@ const STATIC_PATH = "./static";
 
 const socketArray = []
 
-const socketHandler = async (req) => {
+const chatSocketHandler = async (req) => {
     const { socket, response } = Deno.upgradeWebSocket(req);
     
     const number = socketArray.length
@@ -32,9 +32,16 @@ const socketHandler = async (req) => {
     return response;
 }
 
+/**
+ * 
+ * @param {Request} req 
+ * @returns 
+ */
 const handler = async (req) => {
-    if (req.headers.get("upgrade") == "websocket") {
-        return socketHandler(req);
+    const url = new URL(req.url)
+
+    if (url.pathname == "/chat" && req.headers.get("upgrade") == "websocket") {
+        return chatSocketHandler(req);
     }
 
     return serveDir(req, {
