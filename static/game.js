@@ -20,10 +20,13 @@ app.canvas.setAttribute("tabindex", "1");
 //  All input is now in currentInput object
 initInputCapture(app.canvas);
 
-let player = new Platform(app, engine, 200, 100, 0xff0000, false);
-let ground = new Platform(app, engine, app.screen.width, 100, 0x00ff00);
+let player = new Platform(200, 100, 0xff0000, false);
+let ground = new Platform(app.screen.width, 100, 0x00ff00);
 player.body.restitution = 1.8;
 Matter.Body.setPosition(ground.body, { x: 0, y: app.screen.height - 50 });
+
+player.register(app, engine);
+ground.register(app, engine);
 
 let elapsed = 0.0;
 
