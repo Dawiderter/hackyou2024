@@ -12,9 +12,23 @@ export class Object {
         this.sprite.rotation = this.body.angle;
     }
 
-    register(app, engine) {
+    register(app, engine, objects) {
         Matter.World.add(engine.world, this.body);
         app.stage.addChild(this.sprite);
+        objects.push(this);
+
+        // TODO: This is temporary
+        this.objectsContainer = objects;
+        this.app = app
+        this.engine = engine
+    }
+
+    // NOTE: Very inefficient,
+    // TODO: Change this garbage
+    delete() {
+        Matter.World.remove(this.engine.world, this.body);
+        this.sprite.destroy();
+        this.objectsContainer.splice(this.objectsContainer.indexOf(this), 1);
     }
 }
 

@@ -10,8 +10,8 @@ await app.init({
   background: "#1099bb",
   resizeTo: container,
 });
-
 let engine = Matter.Engine.create();
+let gameObjects = []
 
 container.appendChild(app.canvas);
 app.canvas.setAttribute("tabindex", "1");
@@ -25,8 +25,13 @@ let ground = new Platform(app.screen.width, 100, 0x00ff00);
 player.body.restitution = 1.8;
 Matter.Body.setPosition(ground.body, { x: 0, y: app.screen.height - 50 });
 
-player.register(app, engine);
-ground.register(app, engine);
+player.sprite.interactive = true;
+player.sprite.on("pointerdown", (event) => {
+    player.delete();
+});
+
+player.register(app, engine, gameObjects);
+ground.register(app, engine, gameObjects);
 
 let elapsed = 0.0;
 
@@ -38,21 +43,26 @@ Matter.Runner.run(runner, engine);
 app.ticker.add((ticker) => {
   elapsed += ticker.deltaTime;
 
-  // if (currentInput.goingRight) {
-  //   boxBody.position.x += 5;
-  // }
-  // if (currentInput.goingLeft) {
-  //   boxBody.position.x -= 5;
-  // }
-  // if (currentInput.goingUp) {
-  //   boxBody.position.y -= 5;
-  // }
-  // if (currentInput.goingDown) {
-  //   boxBody.position.y += 5;
-  // }
+  if (currentInput.goingRight) {
+      let velocity = player.body.velocity;
+      Matter.engine.setVelocity(player.body, { x: 5, y: velocity.y });
+  }
+  if (currentInput.goingLeft) {
+        let velocity = player.body.velocity;
+        Matter.engine.setVelocity(player.body, { x: -5, y: velocity.y });
+  }
+  if (currentInput.goingUp) {
+      let velocity = player.body.velocity;
+        Matter.engine.setVelocity(player.body, { x: velocity.x, y: -5 });
+  }
+  if (currentInput.goingDown) {
+        let velocity = player.body.velocity;
+        Matter.engine.setVelocity(player.body, { x: velocity.x, y: 5 });
+  }
 
   Matter.Engine.update(engine, ticker.deltaTime * 1000 / 60);
- 
-  player.update();
-  ground.update();
+
+  for(let obj of gameObjects) {
+    obj.update();
+  }
 });
