@@ -1,3 +1,4 @@
+import { currentInput, initInputCapture } from "./input.js";
 import * as Pixi from "./pixi.mjs";
 import Matter from "https://esm.sh/matter-js@0.20.0";;
 
@@ -10,11 +11,15 @@ await app.init({
 });
 
 container.appendChild(app.canvas);
+app.canvas.setAttribute("tabindex", "1");
+
+// Init capturing input when canvas is focused
+//  All input is now in currentInput object
+initInputCapture(app.canvas);
 
 let sprite = new Pixi.Graphics().rect(0, 0, 200, 100).fill(0xff0000);
 sprite.cursor = "pointer";
 sprite.eventMode = "static";
-sprite.on("pointerdown", onClick);
 sprite.y = app.screen.height / 2;
 
 app.stage.addChild(sprite);
@@ -50,15 +55,25 @@ Matter.Runner.run(runner, engine);
 
 app.stage.addChild(groundSprite);
 
-function onClick() {
-
-}
-
 app.ticker.add((ticker) => {
   elapsed += ticker.deltaTime;
 
-  sprite.x = boxBody.position.x;
-  sprite.y = boxBody.position.y;
+  if (currentInput.goingRight) {
+    boxBody.position.x += 5;
+  }
+  if (currentInput.goingLeft) {
+    boxBody.position.x -= 5;
+  }
+  if (currentInput.goingUp) {
+    boxBody.position.y -= 5;
+  }
+  if (currentInput.goingDown) {
+    boxBody.position.y += 5;
+  }
 
   Matter.Engine.update(engine, ticker.deltaTime * 1000 / 60);
+
+  sprite.x = boxBody.position.x;
+  sprite.y = boxBody.position.y;
+  
 });
