@@ -47,7 +47,13 @@
       }
     }
   },
-  "remote": {},
+  "redirects": {
+    "https://esm.sh/v135/@types/matter-js@~0/index.d.ts": "https://esm.sh/v135/@types/matter-js@0.19.7/index.d.ts"
+  },
+  "remote": {
+    "https://esm.sh/matter-js@0.20.0": "c367eb37ba4e450284555910d5f82066823a08b7542ef138cc338e623f840dbf",
+    "https://esm.sh/v135/matter-js@0.20.0/denonext/matter-js.mjs": "f6f2eccea51a6f539716879a5a2a27b1acb8cba153a8f7444929ce8f424d3996"
+  },
   "workspace": {
     "dependencies": [
       "jsr:@std/http@^1.0.7"

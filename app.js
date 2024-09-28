@@ -2,8 +2,16 @@ import { serveDir } from "@std/http/file-server";
 
 const STATIC_PATH = "./static";
 
+/**
+ * @type {WebSocket[]}
+ */
 const socketArray = []
 
+/**
+ * 
+ * @param {Request} req 
+ * @returns 
+ */
 const chatSocketHandler = async (req) => {
     const { socket, response } = Deno.upgradeWebSocket(req);
     
@@ -35,7 +43,7 @@ const chatSocketHandler = async (req) => {
 /**
  * 
  * @param {Request} req 
- * @returns 
+ * @returns
  */
 const handler = async (req) => {
     const url = new URL(req.url)
