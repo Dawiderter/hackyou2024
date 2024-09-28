@@ -23,7 +23,6 @@ body {
   justify-content: center;
   align-items: center;
   height: 100%;
-  width: 20vw;
 }
 #chat_area {
   overflow-y: scroll;
@@ -32,9 +31,30 @@ body {
   margin: 1rem;
   height: 100%;
   width: 100%;
+  padding: 0.5rem;
 }
 .chat_wrapper {
   display: flex;
+}
+#text_input {
+  padding: 0.5rem;
+  border: 1px solid black;
+  border-radius: 10px;
+  font-size: 1rem;
+}
+#send_button {
+  padding: 0.5rem;
+  border: 1px solid black;
+  border-radius: 10px;
+  font-size: 1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+#send_button:hover {
+  background-color: #e3e3e3;
+}
+#send_button:active {
+  transform: scale(0.9);
 }
 @media screen and (max-width: 1000px) {
   .container {
