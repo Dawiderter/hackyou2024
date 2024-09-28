@@ -1,24 +1,32 @@
-import * as PIXI from "./pixi.mjs"
+import * as PIXI from "./pixi.mjs";
+import Player from "./src/player.js";
 
 const app = new PIXI.Application();
-await app.init({ width: 640, height: 360 });
+await app.init({ background: "#1099bb", resizeTo: window });
 
 document.body.appendChild(app.canvas);
 
-let sprite = new PIXI.Graphics()
-  .rect(0, 0, 200, 100)
-  .fill(0xff0000);
+let sprite = new PIXI.Graphics().rect(0, 0, 200, 100).fill(0xff0000);
+sprite.cursor = "pointer";
+sprite.eventMode = "static";
+sprite.on("pointerdown", onClick);
+sprite.y = app.screen.height / 2;
 
 app.stage.addChild(sprite);
 
-// Add a variable to count up the seconds our demo has been running
 let elapsed = 0.0;
-// Tell our application's ticker to run a new callback every frame, passing
-// in the amount of time that has passed since the last tick
+
+app.ticker.maxFPS = 60;
+
+let player = new Player();
+player.scream();
+
+function onClick() {
+  elapsed -= 20;
+}
+
 app.ticker.add((ticker) => {
-    // Add the time to our total elapsed time
-    elapsed += ticker.deltaTime;
-    // Update the sprite's X position based on the cosine of our elapsed time.  We divide
-    // by 50 to slow the animation down a bit...
-    sprite.x = 100.0 + Math.cos(elapsed/50.0) * 100.0;
+  elapsed += ticker.deltaTime;
+  sprite.x = 100.0 + Math.tan(elapsed / 50.0) * 100.0;
+    sprite.y = app.screen.height / 2 + Math.sin(elapsed/ 10.) * 500;
 });
