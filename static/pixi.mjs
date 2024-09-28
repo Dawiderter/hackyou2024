@@ -1,3 +1,4 @@
+// deno-lint-ignore-file
 /*!
  * PixiJS - v8.4.1
  * Compiled Thu, 19 Sep 2024 10:28:58 UTC

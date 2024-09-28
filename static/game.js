@@ -1,12 +1,12 @@
-import * as PIXI from "./pixi.mjs";
-import Player from "./src/player.js";
+import * as Pixi from "./pixi.mjs";
+import Player from "./player.js";
 
-const app = new PIXI.Application();
+const app = new Pixi.Application();
 await app.init({ background: "#1099bb", resizeTo: window });
 
 document.body.appendChild(app.canvas);
 
-let sprite = new PIXI.Graphics().rect(0, 0, 200, 100).fill(0xff0000);
+let sprite = new Pixi.Graphics().rect(0, 0, 200, 100).fill(0xff0000);
 sprite.cursor = "pointer";
 sprite.eventMode = "static";
 sprite.on("pointerdown", onClick);
@@ -28,5 +28,5 @@ function onClick() {
 app.ticker.add((ticker) => {
   elapsed += ticker.deltaTime;
   sprite.x = 100.0 + Math.tan(elapsed / 50.0) * 100.0;
-    sprite.y = app.screen.height / 2 + Math.sin(elapsed/ 10.) * 500;
+  sprite.y = app.screen.height / 2 + Math.sin(elapsed / 10.) * 500;
 });
