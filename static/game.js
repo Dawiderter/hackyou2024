@@ -18,15 +18,37 @@ let elapsed = 0.0;
 
 app.ticker.maxFPS = 60;
 
-let player = new Player();
-player.scream();
+const textArea=document.getElementById("chat_area");
+const submitButton=document.getElementById("send_button");
+const textInput = document.getElementById("text_input");
+
+const socket = new WebSocket("./");
+
+socket.addEventListener("open", (event) => { console.log("Connected") });
+
+socket.addEventListener("message", (event) => {
+  console.log(event.data);
+
+  const newP=document.createElement("p")
+  newP.innerText=event.data
+  textArea.appendChild(newP)
+  //textArea.textContent += event.data + "\r\n";
+});
+
+submitButton.addEventListener("click", (event) => {
+  const input = textInput.value;
+  textInput.value = "";
+  socket.send(input);
+})
+
 
 function onClick() {
-  elapsed -= 20;
+  socket.send("hihi");
 }
 
+
 app.ticker.add((ticker) => {
-  elapsed += ticker.deltaTime;
+  //elapsed += ticker.deltaTime;
   sprite.x = 100.0 + Math.tan(elapsed / 50.0) * 100.0;
   sprite.y = app.screen.height / 2 + Math.sin(elapsed / 10.) * 500;
 });
